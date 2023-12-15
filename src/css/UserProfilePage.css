@@ -1,1 +1,7 @@
 @import "./main.css";
+
+
+.user-profile-page .main {
+    flex: 1;
+  }
+  
