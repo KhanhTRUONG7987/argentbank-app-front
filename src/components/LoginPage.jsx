@@ -1,15 +1,61 @@
-import { useNavigate } from "react-router-dom";
-import Navbar from "./NavBar";
-import Footer from "./Footer";
-import "../css/main.css";
-import "../css/LoginPage.css";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; 
+import Navbar from './NavBar';
+import Footer from './Footer';
+import { loginSuccess } from '../actions/authActions';
+import '../css/main.css';
+import '../css/LoginPage.css';
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSignIn = () => {
-    navigate("/user-profile");
+  // state to hold the username and password from the form
+  const [formData, setFormData] = useState({
+    username: 'tony@stark.com',
+    password: 'password123',
+  });
+
+  const handleInputChange = (e) => {
+    // update the formData state when input values change
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
   };
+
+  const handleSignIn = async () => {
+    console.log('Sign In button clicked');
+    
+    try {
+      // make API call to login endpoint using axios
+      const response = await axios.post('http://localhost:3001/api/v1/user/login', {
+        username: formData.username,
+        password: formData.password,
+      });
+
+      // check if login was successful
+      if (response.status === 200) {
+        const userData = response.data;
+
+        // dispatch login success action
+        dispatch(loginSuccess(userData));
+
+        console.log('Before navigate');
+        // navigate to user profile page
+        navigate('/user-profile');
+        console.log('After navigate');
+      } else {
+        // handle login failure
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
+  };
+
   return (
     <div className="login-page">
       <Navbar />
@@ -20,11 +66,23 @@ const LoginPage = () => {
           <form>
             <div className="input-wrapper">
               <label htmlFor="username">Username</label>
-              <input type="text" id="username" />
+              <input
+                type="text"
+                id="username"
+                value={formData.username}
+                onChange={handleInputChange}
+                autoComplete="username"
+              />
             </div>
             <div className="input-wrapper">
               <label htmlFor="password">Password</label>
-              <input type="password" id="password" />
+              <input
+                type="password"
+                id="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                autoComplete="current-password"
+              />
             </div>
             <div className="input-remember">
               <input type="checkbox" id="remember-me" />
