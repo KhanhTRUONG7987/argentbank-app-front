@@ -14,8 +14,8 @@ const LoginPage = () => {
 
   // state to hold the username and password from the form
   const [formData, setFormData] = useState({
-    username: 'tony@stark.com',
-    password: 'password123',
+    username: '',
+    password: '',
   });
 
   const handleInputChange = (e) => {
@@ -32,13 +32,16 @@ const LoginPage = () => {
     try {
       // make API call to login endpoint using axios
       const response = await axios.post('http://localhost:3001/api/v1/user/login', {
-        username: formData.username,
+        email: formData.username,
         password: formData.password,
       });
 
       // check if login was successful
       if (response.status === 200) {
-        const userData = response.data;
+        const {token, userData} = response.data;
+
+        // Store token in localStorage or Redux store
+        localStorage.setItem('jwtToken', token);
 
         // dispatch login success action
         dispatch(loginSuccess(userData));
@@ -88,7 +91,7 @@ const LoginPage = () => {
               <input type="checkbox" id="remember-me" />
               <label htmlFor="remember-me">Remember me</label>
             </div>
-            <button className="sign-in-button" onClick={handleSignIn}>
+            <button type = "button" className= "sign-in-button" onClick={handleSignIn}>
               Sign In
             </button>
           </form>

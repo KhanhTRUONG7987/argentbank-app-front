@@ -14,11 +14,7 @@ const authReducer = (state = initialState, action) => {
         isAuthenticated: true,
       };
     case actionTypes.LOGOUT_SUCCESS:
-      return {
-        ...state,
-        user: null,
-        isAuthenticated: false,
-      };
+      return initialState;
     case actionTypes.UPDATE_USER_PROFILE:
       return {
         ...state,

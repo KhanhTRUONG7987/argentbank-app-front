@@ -1,26 +1,41 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios'; 
-import Navbar from './NavBar';
-import Footer from './Footer';
-import UserProfileHeader from './UserProfileHeader';
-import AccountSection from './AccountSection';
-import { updateUserProfile, logoutSuccess } from '../actions/authActions';
-import '../css/main.css';
-import '../css/UserProfilePage.css';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import Navbar from "./NavBar";
+import Footer from "./Footer";
+import UserProfileHeader from "./UserProfileHeader";
+import AccountSection from "./AccountSection";
+import { updateUserProfile, logoutSuccess } from "../actions/authActions";
+import "../css/main.css";
+import "../css/UserProfilePage.css";
 
 const UserProfilePage = () => {
+  useEffect(() => {
+    console.log('UserProfilePage component mounted');
+  }, []);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
 
+  // State to hold the form input values
+  const [formValues, setFormValues] = useState({
+    firstName: user ? user.firstName : "",
+    lastName: user ? user.lastName : "",
+  });
+
+  const handleInputChange = (e) => {
+    setFormValues({
+      ...formValues,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleEditName = async () => {
-    const updateProfileEndpoint = 'http://localhost:3001/api/v1/user/profile';
+    const updateProfileEndpoint = "http://localhost:3001/api/v1/user/profile";
 
     try {
       const response = await axios.put(updateProfileEndpoint, {
-        // update! 
-        firstName: 'New First Name',
-        lastName: 'New Last Name',
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
       });
 
       const updatedProfileData = response.data;
@@ -28,28 +43,53 @@ const UserProfilePage = () => {
       // dispatch update user profile action
       dispatch(updateUserProfile(updatedProfileData));
     } catch (error) {
-      console.error('Error updating user profile:', error);
+      console.error("Error updating user profile:", error);
     }
   };
 
   const handleLogout = async () => {
-    const logoutEndpoint = 'http://localhost:3001/api/v1/user/logout';
-
     try {
-      await axios.post(logoutEndpoint);
-
       // dispatch logout success action
       dispatch(logoutSuccess());
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     }
   };
 
   return (
-    <div className='user-profile-page'>
+    <div className="user-profile-page">
       <Navbar />
       <main className="main bg-dark">
-        <UserProfileHeader username={user ? user.username : ''} />
+        <UserProfileHeader username={user ? user.username : ""} />
+
+        {/* User Profile Form */}
+        <form className="user-profile-form">
+          <label htmlFor="firstName">First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={formValues.firstName}
+            onChange={handleInputChange}
+          />
+
+          <label htmlFor="lastName">Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={formValues.lastName}
+            onChange={handleInputChange}
+          />
+
+          <button
+            type="button"
+            className="edit-button"
+            onClick={handleEditName}
+          >
+            Edit Name
+          </button>
+        </form>
         <h2 className="sr-only">Accounts</h2>
         <AccountSection
           accountTitle="Argent Bank Checking (x8349)"
