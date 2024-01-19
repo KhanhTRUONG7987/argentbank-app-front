@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; 
-import Navbar from './NavBar';
-import Footer from './Footer';
-import { loginSuccess } from '../actions/authActions';
-import '../css/main.css';
-import '../css/LoginPage.css';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../api/App";
+import Navbar from "./NavBar";
+import Footer from "./Footer";
+import { loginSuccess } from "../actions/authActions";
+import "../css/main.css";
+import "../css/LoginPage.css";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -14,8 +14,8 @@ const LoginPage = () => {
 
   // state to hold the username and password from the form
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
 
   const handleInputChange = (e) => {
@@ -27,35 +27,29 @@ const LoginPage = () => {
   };
 
   const handleSignIn = async () => {
-    console.log('Sign In button clicked');
-    
+    console.log("Sign In button clicked");
+
     try {
       // make API call to login endpoint using axios
-      const response = await axios.post('http://localhost:3001/api/v1/user/login', {
-        email: formData.username,
-        password: formData.password,
-      });
 
-      // check if login was successful
-      if (response.status === 200) {
-        const {token, userData} = response.data;
+      const token = await login(formData.username, formData.password);
 
+      if (token && token !== "") {
         // Store token in localStorage or Redux store
-        localStorage.setItem('jwtToken', token);
+        localStorage.setItem("jwtToken", token);
 
         // dispatch login success action
-        dispatch(loginSuccess(userData));
+        dispatch(loginSuccess());
 
-        console.log('Before navigate');
+        console.log("Before navigate");
         // navigate to user profile page
-        navigate('/user-profile');
-        console.log('After navigate');
+        navigate("/user-profile");
       } else {
-        // handle login failure
-        console.error('Login failed');
+        console.log("Password or username mismatch");
       }
+      console.log("After navigate");
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error("Error during login:", error);
     }
   };
 
@@ -91,7 +85,11 @@ const LoginPage = () => {
               <input type="checkbox" id="remember-me" />
               <label htmlFor="remember-me">Remember me</label>
             </div>
-            <button type = "button" className= "sign-in-button" onClick={handleSignIn}>
+            <button
+              type="button"
+              className="sign-in-button"
+              onClick={handleSignIn}
+            >
               Sign In
             </button>
           </form>

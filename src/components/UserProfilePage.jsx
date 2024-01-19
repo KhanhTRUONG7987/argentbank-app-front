@@ -1,26 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import UserProfileHeader from "./UserProfileHeader";
 import AccountSection from "./AccountSection";
+import { getUser, updateUser } from "../api/App";
 import { updateUserProfile, logoutSuccess } from "../actions/authActions";
 import "../css/main.css";
 import "../css/UserProfilePage.css";
 
 const UserProfilePage = () => {
-  useEffect(() => {
-    console.log('UserProfilePage component mounted');
-  }, []);
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   // State to hold the form input values
   const [formValues, setFormValues] = useState({
-    firstName: user ? user.firstName : "",
-    lastName: user ? user.lastName : "",
+    firstName: "",
+    lastName: "",
   });
+
+  useEffect(() => {
+    console.log("UserProfilePage component mounted");
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    const user = await getUser();
+    console.log(user);
+    setFormValues({
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+    dispatch(updateUserProfile(user));
+  };
 
   const handleInputChange = (e) => {
     setFormValues({
@@ -30,16 +42,11 @@ const UserProfilePage = () => {
   };
 
   const handleEditName = async () => {
-    const updateProfileEndpoint = "http://localhost:3001/api/v1/user/profile";
-
     try {
-      const response = await axios.put(updateProfileEndpoint, {
-        firstName: formValues.firstName,
-        lastName: formValues.lastName,
-      });
-
-      const updatedProfileData = response.data;
-
+      const updatedProfileData = await updateUser(
+        formValues.firstName,
+        formValues.lastName
+      );
       // dispatch update user profile action
       dispatch(updateUserProfile(updatedProfileData));
     } catch (error) {
@@ -56,11 +63,13 @@ const UserProfilePage = () => {
     }
   };
 
+  console.log("USER ----->", user);
+
   return (
     <div className="user-profile-page">
       <Navbar />
       <main className="main bg-dark">
-        <UserProfileHeader username={user ? user.username : ""} />
+        <UserProfileHeader username={user ? user.firstName : ""} />
 
         {/* User Profile Form */}
         <form className="user-profile-form">

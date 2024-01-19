@@ -1,4 +1,4 @@
-import * as actionTypes from '../actions/actionTypes';
+import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   user: null,
@@ -10,10 +10,10 @@ const authReducer = (state = initialState, action) => {
     case actionTypes.LOGIN_SUCCESS:
       return {
         ...state,
-        user: action.payload,
         isAuthenticated: true,
       };
     case actionTypes.LOGOUT_SUCCESS:
+      localStorage.removeItem("jwtToken");
       return initialState;
     case actionTypes.UPDATE_USER_PROFILE:
       return {
