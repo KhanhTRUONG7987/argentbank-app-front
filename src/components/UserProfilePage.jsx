@@ -77,47 +77,47 @@ const UserProfilePage = () => {
 
   return (
     <div className="user-profile-page">
-      <Navbar />
       <main className="main bg-dark">
         <UserProfileHeader username={user ? user.firstName : ""} />
 
         {/* User Profile Form */}
         <form className="user-profile-form">
-          <label htmlFor="firstName"></label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formValues.firstName}
-            onChange={handleInputChange}
-          />
+          <div className="info-left">
+            <label htmlFor="firstName"></label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={formValues.firstName}
+              onChange={handleInputChange}
+            />
 
-          <button
-            type="button"
-            className="edit-button"
-            onClick={handleEditName}
-          >
-            Save
-          </button>
+            <button
+              type="button"
+              className="edit-button"
+              onClick={handleEditName}
+            >
+              Save
+            </button>
+          </div>
 
-          <button
-            type="button"
-            className="edit-button"
-            onClick={handleCancelEditName}
-          >
-            Cancel
-          </button>
-
-          <label htmlFor="lastName"></label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formValues.lastName}
-            onChange={handleInputChange}
-          />
-
-          
+          <div className="info-right">
+            <label htmlFor="lastName"></label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={formValues.lastName}
+              onChange={handleInputChange}
+            />
+            <button
+              type="button"
+              className="edit-button"
+              onClick={handleCancelEditName}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
         <h2 className="sr-only">Accounts</h2>
         <AccountSection

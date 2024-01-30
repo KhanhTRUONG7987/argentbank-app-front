@@ -54,7 +54,7 @@ export const editUserProfile = (firstName, lastName) => async (dispatch) => {
   }
 };
 
-export const logoutUser = () => async (dispatch) => {
+export const logoutUser = () => (dispatch) => {
   try {
     dispatch(logoutSuccess());
     localStorage.removeItem("jwtToken");

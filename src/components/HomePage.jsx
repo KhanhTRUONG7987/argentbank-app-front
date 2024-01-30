@@ -1,18 +1,17 @@
-import Navbar from './NavBar';
-import HeroSection from './HeroSection';
-import FeatureItem from './FeatureItem';
-import Footer from './Footer';
-import chatIcon from '../img/icon-chat.png';
-import moneyIcon from '../img/icon-money.png';
-import securityIcon from '../img/icon-security.png';
-import '../css/main.css';
+import Navbar from "./NavBar";
+import HeroSection from "./HeroSection";
+import FeatureItem from "./FeatureItem";
+import Footer from "./Footer";
+import chatIcon from "../img/icon-chat.png";
+import moneyIcon from "../img/icon-money.png";
+import securityIcon from "../img/icon-security.png";
+import "../css/main.css";
 
 const HomePage = () => {
   return (
-    <div>
-      <Navbar />
+    <div className="home-page">
       <main>
-        <HeroSection /> 
+        <HeroSection />
         <section className="features">
           <h2 className="sr-only">Features</h2>
           <FeatureItem

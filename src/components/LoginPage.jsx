@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./NavBar";
 import Footer from "./Footer";
 import { loginUser } from "../actions/authActions";
 import "../css/main.css";
@@ -9,9 +8,16 @@ import "../css/LoginPage.css";
 
 const LoginPage = () => {
   const error = useSelector((state) => state.error);
+  const isAuthenticated = useSelector((state) => state.isAuthenticated);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/profile");
+    }
+  }, [isAuthenticated]);
 
   // state to hold the username and password from the form
   const [formData, setFormData] = useState({
@@ -33,8 +39,6 @@ const LoginPage = () => {
     try {
       // make API call to login endpoint using axios
       dispatch(loginUser(formData.username, formData.password));
-      console.log("HELLO");
-      navigate("/user-profile");
     } catch (error) {
       console.error("Error during login:", error);
     }
@@ -42,7 +46,6 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <Navbar />
       <main className="main bg-dark">
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>

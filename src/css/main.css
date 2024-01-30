@@ -13,8 +13,19 @@ body {
   min-height: 100vh;
 }
 
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .bg-dark {
@@ -124,8 +135,14 @@ body {
 }
 
 .features {
+  padding: 3rem 2rem;
   display: flex;
   flex-direction: column;
+  gap : 2rem;
+}
+
+.features div { 
+  flex : 1;
 }
 
 @media (min-width: 920px) {
@@ -169,8 +186,6 @@ body {
   box-sizing: border-box;
   background-color: white;
   width: 300px;
-  margin: 0 auto;
-  margin-top: 3rem;
   padding: 2rem;
 }
 
@@ -231,7 +246,7 @@ body {
 
 .account-amount {
   margin: 0;
-  font-size: 2.5rem;
+  font-size: 1.7rem;
   font-weight: bold;
 }
 
@@ -292,4 +307,77 @@ body {
   .transaction-button {
     width: 200px;
   }
+}
+
+
+/* navbar */
+.nav-right{ 
+  flex-direction: row;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap : 15px;
+  font-size: .8em;
+}
+
+.nav-right .logout-button, .nav-right .login-button, .nav-right .username-header{
+  flex-direction: row;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+/* user profile form */
+.user-profile-form{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.user-profile-form .info-left, .user-profile-form .info-right{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.user-profile-form .info-left{
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.user-profile-form input{
+  padding:10px;
+}
+
+
+.user-profile-form button{ 
+  width: 70px;
+}
+
+
+/* transactions */
+
+.account .info{
+  display: flex;
+  flex-direction: column;
+}
+
+.account .view-transactions-button{
+  padding: 5px;
+}
+
+/* home page */
+.home-page{
+  flex : 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-page main{
+  flex : 1;
 }
