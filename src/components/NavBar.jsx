@@ -1,7 +1,19 @@
 import '../css/main.css';
+import { useDispatch } from "react-redux";
 import argentBankLogo from '../img/argentBankLogo.png';
+import { logoutSuccess } from "../actions/authActions";
 
-const Navbar = () => {
+const Navbar = ({ username }) => {
+  const dispatch = useDispatch();
+  const handleLogout = async () => {
+    try {
+      // dispatch logout success action
+      dispatch(logoutSuccess());
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <nav className="main-nav">
       <a className="main-nav-logo" href="/">
@@ -13,10 +25,12 @@ const Navbar = () => {
         <h1 className="sr-only">Argent Bank</h1>
       </a>
       <div>
-        <a className="main-nav-item" href="/login">
-          <i className="fa fa-user-circle"></i>
-          Sign In
-        </a>
+      <div className="username-header">
+      <p>{username} ! </p>
+    </div>
+        <button className="logout-button" onClick={handleLogout}>
+          Sign out
+        </button>
       </div>
     </nav>
   );

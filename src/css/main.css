@@ -276,6 +276,10 @@ body {
   color: #fff;
 }
 
+.username-header {
+  color: black;
+}
+
 @media (min-width: 720px) {
   .account {
     flex-direction: row;

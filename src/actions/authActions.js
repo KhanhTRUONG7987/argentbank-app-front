@@ -1,8 +1,13 @@
 import * as actionTypes from "./actionTypes";
-import { login, getUser, updateUser } from "../api/App";
+import { login, getUser, updateUser } from "../api/api";
 
 export const loginSuccess = () => ({
   type: actionTypes.LOGIN_SUCCESS,
+});
+
+export const loginFail = (error) => ({
+  type: actionTypes.LOGIN_FAIL,
+  payload: error,
 });
 
 export const logoutSuccess = () => ({
@@ -16,17 +21,18 @@ export const updateUserProfile = (updatedProfileData) => ({
 
 export const loginUser = (username, password) => async (dispatch) => {
   try {
-    const token = await login(username, password);
-
+    const { token } = await login(username, password);
     if (token && token !== "") {
       localStorage.setItem("jwtToken", token);
       dispatch(loginSuccess());
-      dispatch(fetchUserProfile()); // Fetch user profile after successful login
+      dispatch(fetchUserProfile());
     } else {
       console.log("Password or username mismatch");
+      dispatch(loginFail("Password or username mismatch"));
     }
   } catch (error) {
     console.error("Error during login:", error);
+    dispatch(loginFail("Error during login"));
   }
 };
 
@@ -48,7 +54,7 @@ export const editUserProfile = (firstName, lastName) => async (dispatch) => {
   }
 };
 
-export const logoutUser = () => (dispatch) => {
+export const logoutUser = () => async (dispatch) => {
   try {
     dispatch(logoutSuccess());
     localStorage.removeItem("jwtToken");

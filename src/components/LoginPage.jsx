@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/App";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
-import { loginSuccess } from "../actions/authActions";
+import { loginUser } from "../actions/authActions";
 import "../css/main.css";
 import "../css/LoginPage.css";
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
+  const error = useSelector((state) => state.error);
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   // state to hold the username and password from the form
   const [formData, setFormData] = useState({
@@ -31,23 +32,9 @@ const LoginPage = () => {
 
     try {
       // make API call to login endpoint using axios
-
-      const token = await login(formData.username, formData.password);
-
-      if (token && token !== "") {
-        // Store token in localStorage or Redux store
-        localStorage.setItem("jwtToken", token);
-
-        // dispatch login success action
-        dispatch(loginSuccess());
-
-        console.log("Before navigate");
-        // navigate to user profile page
-        navigate("/user-profile");
-      } else {
-        console.log("Password or username mismatch");
-      }
-      console.log("After navigate");
+      dispatch(loginUser(formData.username, formData.password));
+      console.log("HELLO");
+      navigate("/user-profile");
     } catch (error) {
       console.error("Error during login:", error);
     }
@@ -70,6 +57,8 @@ const LoginPage = () => {
                 onChange={handleInputChange}
                 autoComplete="username"
               />
+
+              {error && <span style={{ color: "red" }}>{error}</span>}
             </div>
             <div className="input-wrapper">
               <label htmlFor="password">Password</label>

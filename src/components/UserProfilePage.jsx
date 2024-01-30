@@ -4,8 +4,8 @@ import Navbar from "./NavBar";
 import Footer from "./Footer";
 import UserProfileHeader from "./UserProfileHeader";
 import AccountSection from "./AccountSection";
-import { getUser, updateUser } from "../api/App";
-import { updateUserProfile, logoutSuccess } from "../actions/authActions";
+import { getUser, updateUser } from "../api/api";
+import { updateUserProfile } from "../actions/authActions";
 import "../css/main.css";
 import "../css/UserProfilePage.css";
 
@@ -23,6 +23,17 @@ const UserProfilePage = () => {
     console.log("UserProfilePage component mounted");
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      console.log("USER CHANGED !", user);
+
+      setFormValues({
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
+    }
+  }, [user]);
 
   const fetchUser = async () => {
     const user = await getUser();
@@ -48,19 +59,18 @@ const UserProfilePage = () => {
         formValues.lastName
       );
       // dispatch update user profile action
-      dispatch(updateUserProfile(updatedProfileData));
+      dispatch(updateUserProfile(updatedProfileData.body));
     } catch (error) {
       console.error("Error updating user profile:", error);
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      // dispatch logout success action
-      dispatch(logoutSuccess());
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
+  const handleCancelEditName = () => {
+    // Reset the form values to their original values from the Redux store
+    setFormValues({
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
   };
 
   console.log("USER ----->", user);
@@ -73,7 +83,7 @@ const UserProfilePage = () => {
 
         {/* User Profile Form */}
         <form className="user-profile-form">
-          <label htmlFor="firstName">First Name:</label>
+          <label htmlFor="firstName"></label>
           <input
             type="text"
             id="firstName"
@@ -82,7 +92,23 @@ const UserProfilePage = () => {
             onChange={handleInputChange}
           />
 
-          <label htmlFor="lastName">Last Name:</label>
+          <button
+            type="button"
+            className="edit-button"
+            onClick={handleEditName}
+          >
+            Save
+          </button>
+
+          <button
+            type="button"
+            className="edit-button"
+            onClick={handleCancelEditName}
+          >
+            Cancel
+          </button>
+
+          <label htmlFor="lastName"></label>
           <input
             type="text"
             id="lastName"
@@ -91,13 +117,7 @@ const UserProfilePage = () => {
             onChange={handleInputChange}
           />
 
-          <button
-            type="button"
-            className="edit-button"
-            onClick={handleEditName}
-          >
-            Edit Name
-          </button>
+          
         </form>
         <h2 className="sr-only">Accounts</h2>
         <AccountSection
@@ -118,12 +138,6 @@ const UserProfilePage = () => {
           amountDescription="Current Balance"
           buttonLabel="View transactions"
         />
-        <button className="edit-button" onClick={handleEditName}>
-          Edit Name
-        </button>
-        <button className="logout-button" onClick={handleLogout}>
-          Logout
-        </button>
       </main>
       <Footer />
     </div>
